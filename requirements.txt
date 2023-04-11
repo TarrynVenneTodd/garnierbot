@@ -1,1 +1,4 @@
-discord.py[voice]PyNaClyoutube_dlyoutubesearchpythonffmpeg
+discord.py[voice]
+PyNaCl
+youtube_dl
+youtube-search-python
