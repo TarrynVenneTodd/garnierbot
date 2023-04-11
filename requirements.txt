@@ -2,3 +2,4 @@ discord.py[voice]
 PyNaCl
 youtube_dl
 youtube-search-python
+pytube==11.0.1
