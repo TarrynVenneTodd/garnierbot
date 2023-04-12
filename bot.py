@@ -5,7 +5,7 @@ from youtubesearchpython import VideosSearch
 
 import os
 
-TOKEN = os.environ['MTA5NDg0MDE1NTU2ODg2NTI5MA.GGVbKA.u6bVdIRWoi7ZE-wQFFa963fo74ti44JLM9onMk']
+TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -128,7 +128,6 @@ async def help(ctx):
     "!resume        - Resumes the paused song\n"
     "!help          - Lists all available commands\n"
     "```")
-  await ctx.send(help_message)
-
+await ctx.send(help_message)
 
 bot.run(TOKEN)
