@@ -3,6 +3,13 @@ from discord.ext import commands
 from pytube import YouTube
 from youtubesearchpython import VideosSearch
 import os
+import asyncio
+
+try:
+    import uvloop
+    asyncio.set_event_loop_policy(uvloop.EventLoopPolicy())
+except ImportError:
+    pass  # uvloop is not installed, will use default asyncio event loop
 
 TOKEN = os.environ['DISCORD_BOT_TOKEN']
 
@@ -36,11 +43,19 @@ async def play_audio(ctx, url):
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
         'options': '-vn',
     }
-    ctx.voice_client.play(discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS, executable="ffmpeg"), after=lambda e: await play_next(ctx))
+
+    ctx.voice_client.play(discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS, executable="ffmpeg"), after=lambda e: asyncio.run_coroutine_threadsafe(play_next_async(ctx, e), bot.loop))
 
     ctx.voice_client.source = discord.PCMVolumeTransformer(ctx.voice_client.source, volume=0.5)
     await ctx.send(f'Now playing: {video.title}')
 
+async def play_next(ctx, e):
+    await ctx.invoke(ctx.bot.get_command("play_next"))
+
+async def play_next_async(ctx, e):
+    await play_next(ctx)
+
+@bot.command()
 async def play_next(ctx):
     if len(queues[ctx.guild.id]) > 0:
         url = queues[ctx.guild.id].pop(0)
