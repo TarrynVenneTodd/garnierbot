@@ -44,18 +44,11 @@ async def play_audio(ctx, url):
         'options': '-vn',
     }
 
-    ctx.voice_client.play(discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS, executable="ffmpeg"), after=lambda e: asyncio.run_coroutine_threadsafe(play_next_async(ctx, e), bot.loop))
+    ctx.voice_client.play(discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS, executable="ffmpeg"), after=lambda e: asyncio.run_coroutine_threadsafe(play_next(ctx), bot.loop))
 
     ctx.voice_client.source = discord.PCMVolumeTransformer(ctx.voice_client.source, volume=0.5)
     await ctx.send(f'Now playing: {video.title}')
 
-async def play_next(ctx, e):
-    await ctx.invoke(ctx.bot.get_command("play_next"))
-
-async def play_next_async(ctx, e):
-    await play_next(ctx)
-
-@bot.command()
 async def play_next(ctx):
     if len(queues[ctx.guild.id]) > 0:
         url = queues[ctx.guild.id].pop(0)
