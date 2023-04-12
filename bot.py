@@ -36,7 +36,7 @@ async def play_audio(ctx, url):
         'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
         'options': '-vn',
     }
-    ctx.voice_client.play(discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS, executable="ffmpeg"), after=lambda e: play_next(ctx))
+    ctx.voice_client.play(discord.FFmpegPCMAudio(url2, **FFMPEG_OPTIONS, executable="ffmpeg"), after=lambda e: await play_next(ctx))
 
     ctx.voice_client.source = discord.PCMVolumeTransformer(ctx.voice_client.source, volume=0.5)
     await ctx.send(f'Now playing: {video.title}')
@@ -76,7 +76,7 @@ async def leave(ctx):
 
 @bot.command()
 async def next(ctx):
-    play_next(ctx)
+    await play_next(ctx)
 
 @bot.command()
 async def previous(ctx):
@@ -104,7 +104,7 @@ async def help(ctx):
         "!play [query]  - Plays a song from YouTube based on the search query\n"
         "!stop          - Stops the currently playing song\n"
         "!leave         - Makes the bot leave the voice channel\n"
-        "!next          - Skips the current song and plays the next in the queue\n" 
+        "!next          - Skips the current song and plays the next in the queue\n"
         "!previous      - Plays the last song\n"
         "!pause         - Pauses the currently playing song\n"
         "!resume        - Resumes the paused song\n"
