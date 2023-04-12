@@ -4,7 +4,7 @@ from pytube import YouTube
 from youtubesearchpython import VideosSearch
 import os
 
-TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+TOKEN = os.environ['DISCORD_BOT_TOKEN']
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -97,6 +97,12 @@ async def resume(ctx):
         await ctx.send("Resumed")
 
 @bot.command()
+async def volume(ctx, volume: int):
+    if ctx.voice_client is not None:
+        ctx.voice_client.source.volume = volume / 100
+        await ctx.send(f"Volume set to {volume}%")
+
+@bot.command()
 async def help(ctx):
     help_message = (
         "```\n"
@@ -108,6 +114,7 @@ async def help(ctx):
         "!previous      - Plays the last song\n"
         "!pause         - Pauses the currently playing song\n"
         "!resume        - Resumes the paused song\n"
+        "!volume [0-100]- Sets the volume of the bot (0-100)\n"
         "!help          - Lists all available commands\n"
         "```")
     await ctx.send(help_message)
